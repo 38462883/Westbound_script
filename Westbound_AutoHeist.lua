@@ -1,46 +1,26 @@
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local LocalPlayer = Players.LocalPlayer
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 
 local soygunAcik = false
 local mobile = false
 
--- Mobil kontrol butonu
+-- ✅ Mobil kontrol butonu (sağ üst köşe, taşınabilir)
 local function MobilButonOlustur()
 	local ekran = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 	ekran.Name = "WB_MobilKontrol"
+	ekran.ResetOnSpawn = false
 
 	local buton = Instance.new("TextButton", ekran)
 	buton.Size = UDim2.new(0, 60, 0, 30)
-	buton.Position = UDim2.new(0, 10, 0, 10)
+	buton.Position = UDim2.new(1, -70, 0, 10) -- Sağ üst köşe
 	buton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 	buton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	buton.Text = "Aç"
-
-	-- Sürüklenebilir
-	local dragging = false
-	local offset
-
-	buton.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			dragging = true
-			offset = input.Position - buton.AbsolutePosition
-		end
-	end)
-
-	buton.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			dragging = false
-		end
-	end)
-
-	UserInputService.InputChanged:Connect(function(input)
-		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-			buton.Position = UDim2.new(0, input.Position.X - offset.X, 0, input.Position.Y - offset.Y)
-		end
-	end)
+	buton.Draggable = true
+	buton.Active = true
 
 	buton.MouseButton1Click:Connect(function()
 		soygunAcik = not soygunAcik
@@ -48,20 +28,20 @@ local function MobilButonOlustur()
 	end)
 end
 
--- Anti-AFK
+-- ✅ Anti-AFK sistemi
 LocalPlayer.Idled:Connect(function()
 	VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Space, false, game)
 	VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
 end)
 
--- E tuşu simülasyonu
+-- ✅ E tuşu simülasyonu (silah ateşi veya prompt etkileşimi)
 local function EBas()
 	VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.E, false, game)
 	wait(0.1)
 	VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.E, false, game)
 end
 
--- Otomatik soygun sistemi
+-- ✅ Otomatik soygun sistemi
 local function OtomatikSoygun()
 	while true do
 		task.wait(1)
@@ -78,20 +58,20 @@ local function OtomatikSoygun()
 	end
 end
 
--- Platform kontrolü
+-- ✅ Platform kontrolü: mobil ya da PC
 if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
 	mobile = true
 	MobilButonOlustur()
 else
-	-- PC tuş kontrolü
+	-- PC için E tuşu ile aktif/pasif yap
 	UserInputService.InputBegan:Connect(function(input, gameProcessed)
 		if gameProcessed then return end
 		if input.KeyCode == Enum.KeyCode.E then
 			soygunAcik = not soygunAcik
-			print("[WB AutoHeist] Durum:", soygunAcik and "AKTİF" or "PASİF")
+			warn("[WB AutoHeist] Durum:", soygunAcik and "AKTİF" or "PASİF")
 		end
 	end)
 end
 
--- Başlat
+-- ✅ Sistem başlatılıyor
 task.spawn(OtomatikSoygun)
