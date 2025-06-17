@@ -1,9 +1,8 @@
-
-
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 local soygunAcik = false
 local mobile = false
@@ -12,7 +11,7 @@ local mobile = false
 local function MobilButonOlustur()
 	local ekran = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 	ekran.Name = "WB_MobilKontrol"
-	
+
 	local buton = Instance.new("TextButton", ekran)
 	buton.Size = UDim2.new(0, 60, 0, 30)
 	buton.Position = UDim2.new(0, 10, 0, 10)
@@ -37,7 +36,7 @@ local function MobilButonOlustur()
 		end
 	end)
 
-	game:GetService("UserInputService").InputChanged:Connect(function(input)
+	UserInputService.InputChanged:Connect(function(input)
 		if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 			buton.Position = UDim2.new(0, input.Position.X - offset.X, 0, input.Position.Y - offset.Y)
 		end
@@ -85,7 +84,7 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
 	MobilButonOlustur()
 else
 	-- PC tuş kontrolü
-	game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+	UserInputService.InputBegan:Connect(function(input, gameProcessed)
 		if gameProcessed then return end
 		if input.KeyCode == Enum.KeyCode.E then
 			soygunAcik = not soygunAcik
