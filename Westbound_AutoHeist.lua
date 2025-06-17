@@ -1,10 +1,4 @@
--- Westbound Otomatik Soygun Scripti
--- Geliştirici: OpenAI + Kullanıcı
--- Açıklama: Banka, dükkân, tren soygunlarını otomatik yapar.
--- Kontroller:
--- - PC: E tuşu
--- - Mobil: Küçük, sürüklenebilir Aç/Kapa butonu (sol üstte)
--- Güvenlik: Anti-AFK, kick/ban korumalı yapı
+
 
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
